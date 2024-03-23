@@ -15,7 +15,8 @@ import 'https://cdn.jsdelivr.net/npm/gun/lib/rindexed.js';
 const {button, div, input, label} = van.tags
 var gun = GUN({
   peers:["http://127.0.0.1:3000/gun"],
-  localStorage:false
+  localStorage:false,
+  radisk:false
 });
 
 // gun.get('mark').put({
@@ -43,6 +44,9 @@ const App = () => {
     gun.get(rootkey.val).once((data, key) => {
       console.log("key: ", key);
       console.log("data: ", data);
+      if(data==null){
+        return;
+      }
       nodeData.val = data;
       statusData.innerText = JSON.stringify(data);
     })
@@ -76,6 +80,25 @@ const App = () => {
     statusData.innerText = "None";
   }
 
+  function unixToDate(_item, _key){
+    //return new Date(_num);
+    //console.log(_item[0]['_'])
+    let storeDate = [];
+    let isFound = false;
+    for ( let i=0; i< _item.length;i++ ){
+      if(_item[i].key == '_'){//not sure if the array can find if the length is big
+        storeDate = _item[i].value;
+        isFound=true;
+      }
+    }
+    //console.log(storeDate['>'][_key]);
+    //console.log(new Date(storeDate['>'][_key]).toLocaleString());
+    let time = new Date(storeDate['>'][_key]).toLocaleString() || "";
+
+    //console.log("__: ",_key);
+    return " Last Update: "+time;
+  }
+
   // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/entries
   const dataList = van.derive(()=>{
     // const obj = { a: 5, b: 7, c: 9 };
@@ -94,8 +117,9 @@ const App = () => {
       return div(
         label(' key: '), 
         input({value:it.key,oninput:e=>it.key=e.target.value,placeholder:'key'}),
-        label(' value: '), 
+        label(' value: '),
         input({value:it.value,oninput:e=>it.value=e.target.value,placeholder:'value'}),
+        label(unixToDate(objData, it.key)),
       )
     });
     return div(objList);

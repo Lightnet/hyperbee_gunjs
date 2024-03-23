@@ -99,4 +99,5 @@ gun.on('bye', peer =>{
 ```js
  localstore['!'] = {"test":"test"};
 ```
-  Note if you change the store type and radisk it might break the database layout. Have not checked it yet.
+  Note if you disable radisk which disable the store get and put call for opt config.
+  

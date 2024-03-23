@@ -160,13 +160,12 @@ async function main(){
   // console.log("db.version: ",db.version);
   // console.log("db.id: ",db.id);
   // console.log("hex db.key: ",db.key);
-  console.log("db.key: ",db.key.toString('hex'));
+  //console.log("db.key: ",db.key.toString('hex'));
   // console.log("db.discoveryKey: ",db.discoveryKey);
   // console.log("db.discoveryKey hex: ",db.discoveryKey.toString('hex'));
-  console.log("core.length: ", core.length);
+  //console.log("core.length: ", core.length);
   if (core.length <= 1) {
     console.log('importing dictionary...')
-
   }else{
     // Otherwise just seed the previously-imported dictionary
     console.log('seeding dictionary...')
@@ -204,17 +203,16 @@ async function main(){
   //await db.put(''+'test', JSON.stringify({test:"test"}));
   //console.log(await db.get(''+'test'))
 
-
   // https://stackoverflow.com/questions/60408502/how-to-put-data-in-gundb-at-server-side-as-a-peer
   var gunConfig = {
     web: server.listen(config.port),
     file:false,//disable file save
     peers: config.peers, // peers
     //localStorage:false,// disable ? browser
-    //radisk: true, // 
-    //axe: true, //
-    //store:HBopt.store // works
-    store:Radisk(HBopt) // works
+    //radisk: false, // default true
+    axe: false, // default true
+    store:HBopt.store // works
+    //store:Radisk(HBopt) // works
     //store:Store(HBopt) // nope
     //store:Radix(HBopt) // nope
     //store:Rindexed(HBopt) // works
@@ -227,10 +225,10 @@ async function main(){
     //console.log('HI > ',peer);
     console.log('HI > Peer!');
   });
-  gun.on('bye', peer =>{ 
-    //console.log('BYE > ',peer);
-    console.log('BYE > Peer!');
-  });
+  // gun.on('bye', peer =>{ 
+  //   //console.log('BYE > ',peer);
+  //   console.log('BYE > Peer!');
+  // });
   //console.log(gun);
 
   console.log('Web: http://127.0.0.1:3000');
