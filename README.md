@@ -5,17 +5,18 @@
 # Created By: Lightnet
 
 # Information:
-  Prototype hyerbee and gun.js server.
 
-  Note need more better handle array. Just sample test.
+  Just sample test.
 
-  To test how get and put for gun to set and get from hyerbee.
+  Prototype build for peer to peer network on nodejs npm pear package (https://docs.pears.com). To develop on hyperbee as database and gun.js graph node tree. Since gun.js can be use as server and client to handle app.
 
-  Idea by using the peer to peer network from npm "pear". https://docs.pears.com
+  Idea by using the peer to peer secure network.
 ```
 Pear loads applications remotely from peers and allows anyone to create and share applications with peers.
 ```
- One of the reason is without need certs. Just base on peer to peer network. Is what I think. Since it secure network and keys from pear packages.
+ One of the reason is without need certs on web site hosting. Just used on peer to peer network. Is what I think. Since it secure network and keys from pear packages.
+
+ Note need more better handle array.
 
 # Install:
 ```
@@ -30,6 +31,7 @@ Command line
 npm install
 node webserver.js
 ```
+  Just testing how gun handle get and put into the hyperbee database.
 
 # Notes:
  * windows 10
