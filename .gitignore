@@ -131,4 +131,5 @@ dist
 
 package-lock.json
 hypercore
+corestore
 radata

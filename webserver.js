@@ -6,8 +6,13 @@ import path from 'path';
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
 
+
+import Hyperswarm from 'hyperswarm';
+import Corestore from 'corestore';
 import Hyperbee from 'hyperbee';
 import Hypercore from 'hypercore';
+
+import b4a from 'b4a'
 
 // Note: Pass Gun({localStorage: false}) to disable localStorage.
 import Gun from 'gun';
@@ -92,34 +97,82 @@ function serverHandler(request, response) {
 }
 
 //const server = http.createServer(Gun.serve(__dirname));
-//console.log(RindexedDB);
-//console.log(Gun);
-//console.log(Store);
-
-
+var isSwarm = false;
 async function main(){
-  //set up data
-  const core = new Hypercore("./hypercore");
+  // https://github.com/holepunchto/hypercore
+  // let key = [];
+  // //set up data
+  // const core = new Hypercore(
+  //   "./hypercore",
+  //   key,
+  //   {
+  //     //keyPair: // optionally pass the public key and secret key as a key pair
+  //   }
+  // );
+
+  // const core = new Corestore(Pear.config.storage)
+  const store = new Corestore('./corestore');
+
+  if(isSwarm){
+    const swarm = new Hyperswarm();
+    //Pear.teardown(() => swarm.destroy())
+  
+
+    //swarm.on('connection', (conn, info) => {
+      // swarm1 will receive server connections
+      //conn.write('this is a server connection')
+      //conn.end()
+    //})
+
+    // replication of corestore instance
+    swarm.on('connection', conn => store.replicate(conn))
+  }
+
+  //const db = new Hyperbee(core, { keyEncoding: 'utf-8', valueEncoding: 'json' });
+
+  //storecore
+  const core = store.get({ name: 'my-bee-core' })
+  const db = new Hyperbee(core, { keyEncoding: 'utf-8', valueEncoding: 'json' });
+
+  // wait till all the properties of the hypercore are initialized
   await core.ready();
-  // console.log("Hypercore Information");
+  //console.log("Hypercore Information");
+  console.log("Corestore Information");
   // console.log("core.id: ",core.id);
   // console.log("core.version: ",core.version);
-  // console.log("core.key: ",core.key);
+  //console.log("hex core.key: ",core.key);
+  console.log("core.key: ",core.key.toString('hex'));
   // console.log("core.keyPair: ",core.keyPair);
   // console.log("core.discoveryKey: ",core.discoveryKey);
   // console.log("core.encryptionKey: ",core.encryptionKey);
-
-  const db = new Hyperbee(core, { keyEncoding: 'utf-8', valueEncoding: 'json' });
-
   await db.ready();
+
+  if(isSwarm){
+    // join a topic
+    const discovery = swarm.join(core.discoveryKey);
+    // Only display the key once the Hyperbee has been announced to the DHT
+    discovery.flushed().then(() => {
+      console.log('bee key:', b4a.toString(core.key, 'hex'));
+    })
+  }
+
   console.log("Hyperbee Information");
   // console.log("db.version: ",db.version);
   // console.log("db.id: ",db.id);
-  // console.log("db.key: ",db.key);
-  // console.log("db.key hex: ",db.key.toString('hex'));
+  // console.log("hex db.key: ",db.key);
+  console.log("db.key: ",db.key.toString('hex'));
   // console.log("db.discoveryKey: ",db.discoveryKey);
   // console.log("db.discoveryKey hex: ",db.discoveryKey.toString('hex'));
+  console.log("core.length: ", core.length);
+  if (core.length <= 1) {
+    console.log('importing dictionary...')
 
+  }else{
+    // Otherwise just seed the previously-imported dictionary
+    console.log('seeding dictionary...')
+  }
+
+  //===================================
   //web server
   const server = http.createServer(serverHandler);
   //let localStorage = [];

@@ -116,9 +116,6 @@ const App = () => {
       button({onclick:()=>btnPut()},'put'),
     ),
     div(
-      //label("Data:"),
-      //button({onclick:()=>clearData()},'Clear Data'),
-      //button({onclick:()=>clearList()},'Clear List'),
       button({onclick:()=>btnClear()},'Clear'),
       label("Node Data:"),
     ),
