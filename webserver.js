@@ -11,11 +11,13 @@ import Hypercore from 'hypercore';
 
 // Note: Pass Gun({localStorage: false}) to disable localStorage.
 import Gun from 'gun';
-import SEA from 'gun/sea.js';
-import Radix from 'gun/lib/radix.js';
+//import SEA from 'gun/sea.js';
+//import Radix from 'gun/lib/radix.js';
+import 'gun/lib/radix.js';
 import Radisk from 'gun/lib/radisk.js';
-import Store from 'gun/lib/store.js';
-import Rindexed from 'gun/lib/rindexed.js';
+import 'gun/lib/store.js';
+import 'gun/lib/rindexed.js';
+//import Rindexed from 'gun/lib/rindexed.js';
 
 // var Rad = require('gun/lib/radisk'); // in NodeJS
 //var Rad = window.Radisk; // in Browser, still needs the above script tags.
@@ -90,10 +92,14 @@ function serverHandler(request, response) {
 }
 
 //const server = http.createServer(Gun.serve(__dirname));
+//console.log(RindexedDB);
+//console.log(Gun);
+//console.log(Store);
+
 
 async function main(){
   //set up data
-  const core = new Hypercore("./data");
+  const core = new Hypercore("./hypercore");
   await core.ready();
   // console.log("Hypercore Information");
   // console.log("core.id: ",core.id);
@@ -154,8 +160,8 @@ async function main(){
     //localStorage:false,// disable ? browser
     //radisk: true, // 
     //axe: true, //
-    store:HBopt.store // works
-    //store:Radisk(HBopt) // works
+    //store:HBopt.store // works
+    store:Radisk(HBopt) // works
     //store:Store(HBopt) // nope
     //store:Radix(HBopt) // nope
     //store:Rindexed(HBopt) // works

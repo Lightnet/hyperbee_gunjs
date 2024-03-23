@@ -41,3 +41,62 @@ node webserver.js
  * https://github.com/holepunchto/hyperbee
  * https://docs.pears.com/guides/getting-started
  * https://github.com/amark/gun/issues/1194
+
+
+# database, store and config:
+  There are ways to handle database and config them.
+
+```js
+import Gun from 'gun';
+import SEA from 'gun/sea.js';
+import Radix from 'gun/lib/radix.js';
+import Radisk from 'gun/lib/radisk.js';
+import Store from 'gun/lib/store.js';
+import Rindexed from 'gun/lib/rindexed.js';
+//note might be incorrect set up for lib for testing
+//...
+var DBopt = {store: {}};
+
+DBopt.store.put = async function(key, data, cb){
+  console.log("===PUT===");
+  console.log("key: ", key);
+  console.log("data: ", data);
+  localStorage[''+key] = data;
+}
+
+DBopt.store.get = async function(key, cb){
+  console.log("===GET===");
+  console.log("key: ",key);
+  cb(null, localStorage[''+key])
+}
+
+var gunConfig = {
+  web: server.listen(config.port),
+  file:false,//disable file save
+  peers: config.peers, // peers
+  //localStorage:false,// disable ? browser
+  //radisk: true, // default = true
+  //axe: true, // default = true
+  store:DBopt.store // works
+};
+
+var gun = Gun(gunConfig);
+gun.on('hi', peer =>{ 
+  //console.log('HI > ',peer);
+  console.log('HI > Peer!');
+});
+gun.on('bye', peer =>{ 
+  //console.log('BYE > ',peer);
+  console.log('BYE > Peer!');
+});
+
+```
+
+  Note it store single key by default. Might be incorrect but read in gun js docs site. 
+   * https://gun.eco/docs/RAD
+   * https://gun.eco/docs/Radisk
+   * https://gun.eco/docs/Building-Storage-Adapters (out date)?
+```js
+ localstore['!'] = {"test":"test"};
+```
+  Note if you change the store type and radisk it might break the database layout. Have not checked it yet.
