@@ -41,6 +41,7 @@ node webserver.js
  * https://github.com/holepunchto/hyperbee
  * https://docs.pears.com/guides/getting-started
  * https://github.com/amark/gun/issues/1194
+ * https://github.com/gundb/gun-flint/blob/master/docs/NODE_ADAPTER.MD
 
 
 # database, store and config:
@@ -96,8 +97,60 @@ gun.on('bye', peer =>{
    * https://gun.eco/docs/RAD
    * https://gun.eco/docs/Radisk
    * https://gun.eco/docs/Building-Storage-Adapters (out date)?
+   * https://www.npmjs.com/package/gun-flint
+   
 ```js
  localstore['!'] = {"test":"test"};
 ```
   Note if you disable radisk which disable the store get and put call for opt config.
-  
+
+
+  If not use radisk is disable.
+
+ * https://gun.eco/docs/Building-Storage-Adapters#alternative-to-writing-your-own-adapter-from-scratch
+```js
+var Gun = require('gun/gun');
+
+// `db` param passed in is the gun instance
+// that is being created.
+Gun.on('create', function(db) {
+
+  // This line is critical to allow other
+  // extensions to register as well.
+  this.to.next(db);
+
+  // Register IO listeners with gun context
+  db.on('get', function(request) {
+
+    // same as above.
+    this.to.next(request);
+
+    // read data, etc.
+  });
+  db.on('put', function(request) {
+
+    // same as above.
+    this.to.next(request);
+
+    // write data, etc.
+  });
+});
+```
+  This is another way to handle database get and set data but required more handle of key and value and node graph. Reason is linking data relate to ids.
+
+# Packages:
+ * Note some package are outdate. Required some work.
+   * https://github.com/gundb/gun-flint
+
+ * https://stackoverflow.com/questions/17509669/how-to-install-an-npm-package-from-github-directly
+```
+npm install https://github.com/<user>/<name>.git
+```
+
+```
+npm install git+ssh://git@github.com:<githubname>/<githubrepo.git[#<commit-ish>]
+npm install git+ssh://git@github.com:<githubname>/<githubrepo.git>[#semver:^x.x]
+npm install git+https://git@github.com/<githubname>/<githubrepo.git>
+npm install git://github.com/<githubname>/<githubrepo.git>
+npm install github:<githubname>/<githubrepo>[#<commit-ish>]
+```
