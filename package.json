@@ -20,7 +20,6 @@
     "bare-tty": "^3.2.4",
     "corestore": "^6.17.0",
     "gun": "^0.2020.1239",
-    "gun-flint": "^0.0.17",
     "hyperbee": "^2.18.2",
     "hypercore": "^10.34.1",
     "hypercore-crypto": "^3.4.0",
